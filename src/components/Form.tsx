@@ -1,14 +1,25 @@
-import { useState, type ChangeEvent, type SubmitEvent } from "react";
+import { useState, type ChangeEvent, type Dispatch, type SubmitEvent } from "react";
+import { v4 as uuidv4 } from "uuid";
 import type { Activity } from "../types";
 import { categories } from "../data/categories";
+import type { ActivityActions } from "../reducers/ActivityReducer";
 
-function Form() {
+type FormProps = {
+  dispatch: Dispatch<ActivityActions>
+}
 
-    const [activity, setActivity] = useState<Activity>({
-        category: 1,
-        name: "",
-        calories: 0   
-    })
+// Initial State condition
+const INITIAL_STATE :Activity = {
+  id: uuidv4(),
+  category: 1,
+  name: '',
+  calories: 0
+}
+
+
+function Form({dispatch } : FormProps) {
+
+    const [activity, setActivity] = useState<Activity>(INITIAL_STATE)
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement> | ChangeEvent <HTMLInputElement>) => {
 
@@ -31,9 +42,20 @@ function Form() {
     return name.trim() !== "" && calories > 0;
   }
 
-  const handleSubmit =(e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit =(e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(activity);
+
+
+    dispatch({
+      type: 'save-activity',
+      payload: {newActivity: activity}
+    })
+
+    // set blank the state
+    setActivity({
+      ...INITIAL_STATE,
+      id: uuidv4()
+    })
   }
 
   return (

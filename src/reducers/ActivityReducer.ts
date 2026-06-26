@@ -18,8 +18,14 @@ export const activityReducer = (
 
     if(action.type === 'save-activity'){
         // this code drive the logic to update the state
-
-        console.log('desde el type de save-activity');
+        
+        return {
+            // Take a copy of the state to not lose the reference
+            ...state,
+            activities: [...state.activities, action.payload.newActivity ]
+        }
+        console.log();
     }
 
+    return state;
 }
